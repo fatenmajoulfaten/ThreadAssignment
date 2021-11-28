@@ -2,7 +2,9 @@ public class ThreadAssignment {
 
     static class Counter {
         void count() {
-            //todo implement me
+            for (int j=350;j>0;j--){
+                System.out.println(j);
+            }
         }
     }
 
@@ -15,14 +17,28 @@ public class ThreadAssignment {
 
         @Override
         public void run() {
-            counter.count();
+            synchronized (counter){
+                counter.count();
+                System.out.println("Fin!");
+            }
         }
     }
 
     public static void main(String[] args) {
         Counter counter = new Counter();
 
-        new MyThread(counter).start();
-        new MyThread(counter).start();
+        MyThread t1 = new MyThread(counter);
+        t1.start();
+        MyThread t2 = new MyThread(counter);
+        t2.start();
+        try{
+            t1.join();
+            t2.join();
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }finally {
+            System.out.println("Terminé!");
+        }
+
     }
 }
